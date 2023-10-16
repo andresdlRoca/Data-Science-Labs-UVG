@@ -4,7 +4,6 @@ import joblib
 from flask import Flask, request, jsonify
 
 modelo = load_model('modelo.h5')
-normalizador = joblib.load('normalizador.pkl')
 
 def getPricePrediction(city, area, rooms, bathroom, parking_spaces, floor, animal, furniture):
     return "testing"
