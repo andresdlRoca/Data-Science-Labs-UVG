@@ -1,0 +1,161 @@
+﻿@page "/"
+@using Lab8.Data;
+@inject HttpClient Http
+
+
+<div class="card card-bordered">
+    <EditForm Model="Prediction" OnValidSubmit="FetchPredictions">
+        <!--begin::Header-->
+        <div class="card-header pt-5">
+            <h3>Get Price Predictions</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body">
+
+            <div class="flex-container">
+                <SfDropDownList TValue="string" TItem="City" PopupWidth="250" PopupHeight="600"  @bind-Value="Prediction.city" 
+                                Placeholder="City" DataSource=@cities Width="200">
+                    <DropDownListFieldSettings Text="Name" Value="Name"> </DropDownListFieldSettings>
+                    @* <DropDownListEvents TValue="int" TItem="Furniture" ValueChange="OnFactorySelect"> </DropDownListEvents> *@
+                </SfDropDownList>
+
+                <SfNumericTextBox TValue="int" Placeholder="Rooms" Min="0"
+                                  FloatLabelType="FloatLabelType.Always"
+                                  ShowSpinButton="false"
+                                  @bind-Value="Prediction.rooms">
+                </SfNumericTextBox>
+
+
+                <SfNumericTextBox Placeholder="Bathrooms" Min="0"
+                                  FloatLabelType="FloatLabelType.Always"
+                                  ShowSpinButton="false"
+                                  @bind-Value="Prediction.bathroom">
+                </SfNumericTextBox>
+
+                <SfNumericTextBox Placeholder="Parking Spaces" Min="0"
+                                  FloatLabelType="FloatLabelType.Always"
+                                  ShowSpinButton="false"
+                                  @bind-Value="Prediction.parking">
+                </SfNumericTextBox>
+
+                <SfNumericTextBox Placeholder="Fire Insurance" Min="0"
+                                  FloatLabelType="FloatLabelType.Always"
+                                  ShowSpinButton="false"
+                                  @bind-Value="Prediction.fireInsurance">
+                </SfNumericTextBox>
+
+                <SfDropDownList TValue="string" TItem="Furniture" PopupWidth="250" PopupHeight="600" CssClass="dropdownMargin" @bind-Value="Prediction.isFurnished"
+                                Placeholder="Furniture" DataSource=@furniture Width="200">
+                    <DropDownListFieldSettings Text="Name" Value="Name"> </DropDownListFieldSettings>
+                    @* <DropDownListEvents TValue="int" TItem="Furniture" ValueChange="OnFactorySelect"> </DropDownListEvents> *@
+                </SfDropDownList>
+            </div>
+        </div>
+        <!--end::Body-->
+        <!--begin::Footer-->
+        <div class="card-footer pt-2">
+            <div class="bottom-container m-2">
+                <SfButton class="e-btn e-normal e-primary btn btn-lg">Get Predictions</SfButton>
+            </div>
+        </div>
+        <!--end::Footer-->
+    </EditForm>
+</div>
+
+<br style="marign-top=15px;">
+
+<div class="card card-bordered">
+    <!--begin::Body-->
+    <div class="card-body">
+        <h3>Prediction: $@prediction </h3>
+    </div>
+</div>
+
+
+<SfDialog @ref="DialogWarning" IsModal="true" Width="300px"
+          ShowCloseIcon="true" @bind-Visible="@IsVisible">
+    <DialogEvents OnClose="CloseDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @WarningHeaderMessage </Header>
+        <Content> @WarningContentMessage </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="OK" IsPrimary="true" OnClick="@CloseDialog" />
+    </DialogButtons>
+</SfDialog>
+
+
+<style>
+    .flex-container {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+        .flex-container > * {
+            flex: 1;
+        }
+</style>
+
+
+
+@code{
+
+    public PredictionDTO Prediction = new();
+    SfDialog DialogWarning;
+
+    List<Furniture> furniture = new List<Furniture>
+        {
+            new Furniture() {Name= "not furnished" },
+            new Furniture() {Name= "furnished" },
+        };
+
+    List<City> cities = new List<City>
+    {
+        new City() { Name = "São Paulo" },
+        new City() { Name = "Porto Alegre" },
+        new City() { Name = "Rio de Janeiro" },
+        new City() { Name = "Campinas" },
+        new City() { Name = "Belo Horizonte" }
+    };
+
+
+    private string prediction = "";
+    public string? WarningHeaderMessage;
+    public string? WarningContentMessage;
+    public bool IsVisible;
+
+
+    private async Task FetchPredictions()
+    {
+        if(Prediction.city == null || Prediction.isFurnished == null)
+        {
+            WarningHeaderMessage = "Selection Error";
+            WarningContentMessage = "Please Make srue City or Furniture are not empty before getting a prediction";
+            IsVisible = true;
+            StateHasChanged();
+        }
+        else
+        {
+            var url = $"http://127.0.0.1:5000/modelo?city={Uri.EscapeDataString(Prediction.city)}&rooms={Prediction.rooms}&bathroom={Prediction.bathroom}&parking_spaces={Prediction.parking}&fire_insurance={Prediction.fireInsurance}&furniture={Uri.EscapeDataString(Prediction.isFurnished)}";
+
+            prediction = await Http.GetStringAsync(url);
+            StateHasChanged();
+        }
+
+    }
+
+    public void CloseDialog()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+
+    
+
+    
+
+}

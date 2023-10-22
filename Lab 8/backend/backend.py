@@ -21,7 +21,7 @@ from flask import Flask, request, jsonify
 
 # print(predictions)
 
-model = joblib.load('../modelo.joblib')
+model = joblib.load('modelo.joblib')
 
 def getPricePrediction(city, rooms, bathroom, parking_spaces, fire_insurance, furniture):
     input_data = {

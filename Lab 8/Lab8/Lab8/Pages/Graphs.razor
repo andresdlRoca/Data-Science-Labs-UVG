@@ -1,0 +1,77 @@
+﻿@page "/graphs"
+
+<div class="card card-bordered">
+    <!--begin::Header-->
+    <div class="card-header pt-5">
+        <h3>Graphs</h3>
+    </div>
+    <!--end::Header-->
+
+    <!--begin::Body-->
+    <div class="card-body">
+        <div style="border: 2px solid black; margin-bottom:30px;">
+            <h3>Heatmap</h3>
+            <div class="flex-container">
+                <img src="Source/heatmap.PNG" alt="Description of Image" class="scaled-single"/>
+            </div>
+        </div >
+        <div style="border: 2px solid black; margin-bottom:30px;">
+            <h3>Distributions</h3>
+            <img src="Source/monthlyDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/cityDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/areaDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/roomDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/bathroomDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/parkingDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/floorDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/AnimalDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+            <img src="Source/furnitureDistribution.PNG" alt="Description of Image" class="scaled-distributions" />
+        </div>
+
+        <div style="border: 2px solid black;">
+            <h3>Result</h3>
+            <img src="Source/results.PNG" alt="Description of Image" class="scaled-single" />
+            
+        </div>
+
+
+    </div>
+</div>
+
+
+<style>
+    .flex-container {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 10px;
+        
+    }
+
+        .flex-container > * {
+            flex: 1;
+        }
+
+    .scaled-single {
+        max-width: 500px; 
+        max-height: 500px; 
+        display: block;
+        margin: 0 auto; 
+    }
+
+    .scaled-distributions {
+        max-width: 100%; 
+        max-height: 500px; 
+        display: block;
+        margin: 0 auto; 
+    }
+</style>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
